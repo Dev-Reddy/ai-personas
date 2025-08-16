@@ -46,11 +46,18 @@ async function generateChatResponse(messages: Message[], persona: Persona) {
       parts: [{ text: msg.content }],
     }));
 
+    const groundingTool = {
+      googleSearch: {},
+    };
+
+    const urlContextTool = { urlContext: {} };
+
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-exp",
       contents: formattedContents,
       config: {
         systemInstruction: systemContexts[persona],
+        tools: [groundingTool, urlContextTool],
       },
     });
 
