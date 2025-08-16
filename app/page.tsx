@@ -163,6 +163,47 @@ const quickReplies = [
   "Share some insights",
 ];
 
+// Typing Indicator Component
+const TypingIndicator: React.FC<{ persona: Persona }> = ({ persona }) => {
+  return (
+    <div className="flex gap-3 justify-start">
+      <Avatar className="w-8 h-8 flex-shrink-0">
+        <AvatarImage
+          src={persona.avatar.src || "/placeholder.svg"}
+          alt={persona.name}
+        />
+        <AvatarFallback>
+          {persona.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")}
+        </AvatarFallback>
+      </Avatar>
+      <div className="max-w-[70%] p-4 rounded-lg bg-muted text-muted-foreground">
+        <div className="flex items-center gap-1">
+          <span className="text-sm font-medium font-serif">
+            {persona.name} is typing
+          </span>
+          <div className="flex gap-1 ml-2">
+            <div
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0ms" }}
+            ></div>
+            <div
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "150ms" }}
+            ></div>
+            <div
+              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+              style={{ animationDelay: "300ms" }}
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const FormattedMessage: React.FC<{ content: string }> = ({ content }) => {
   const formatMessage = (text: string) => {
     const paragraphs = text.split("\n\n");
@@ -283,13 +324,14 @@ export default function ChatBotPage() {
   const [selectedPersona, setSelectedPersona] = useState<Persona>(personas[0]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -300,24 +342,32 @@ export default function ChatBotPage() {
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
+    setIsLoading(true);
 
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      body: JSON.stringify({
-        messages: [...messages, userMessage],
-        persona: selectedPersona,
-      }),
-    });
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        body: JSON.stringify({
+          messages: [...messages, userMessage],
+          persona: selectedPersona,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    const assistantMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      content: data.data,
-      role: "assistant",
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, assistantMessage]);
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: data.data,
+        role: "assistant",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // Optionally add error handling UI here
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePersonaChange = (persona: Persona) => {
@@ -489,6 +539,7 @@ export default function ChatBotPage() {
                   variant="ghost"
                   onClick={() => handleQuickReply(reply)}
                   className="w-full justify-start text-left h-auto px-3 font-serif text-base cursor-pointer"
+                  disabled={isLoading}
                 >
                   {reply}
                 </Button>
@@ -544,6 +595,9 @@ export default function ChatBotPage() {
                     )}
                   </div>
                 ))}
+
+                {/* Typing Indicator */}
+                {isLoading && <TypingIndicator persona={selectedPersona} />}
               </div>
             </ScrollArea>
 
@@ -556,9 +610,14 @@ export default function ChatBotPage() {
                   placeholder={`Ask ${selectedPersona.name} anything...`}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   className="flex-1 font-serif bg-white text-lg font-normal p-2 border border-orange-300"
+                  disabled={isLoading}
                 />
-                <Button onClick={handleSendMessage} size="icon">
-                  <Send className="w-4 h-4" />
+                <Button
+                  onClick={handleSendMessage}
+                  size="icon"
+                  disabled={isLoading || !inputValue.trim()}
+                >
+                  <Send className="w-4 h-4 cursor-pointer" />
                 </Button>
               </div>
             </div>
