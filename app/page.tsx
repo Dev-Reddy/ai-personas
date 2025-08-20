@@ -34,6 +34,7 @@ import presidentTrumpImage from "@/assets/president-trump.png";
 import steveJobsImage from "@/assets/steve-jobs.png";
 import { StaticImageData } from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -326,9 +327,17 @@ export default function ChatBotPage() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
+
+  // Ensure focus comes back after message send
+  useEffect(() => {
+    if (!isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [isLoading]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -365,6 +374,7 @@ export default function ChatBotPage() {
     } catch (error) {
       console.error("Error sending message:", error);
       // Optionally add error handling UI here
+      toast.error("Failed to send message. Please see logs for more details.");
     } finally {
       setIsLoading(false);
     }
@@ -605,6 +615,7 @@ export default function ChatBotPage() {
             <div className="p-6 border-t border-border">
               <div className="flex gap-2">
                 <Input
+                  ref={inputRef as React.RefObject<HTMLInputElement>}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={`Ask ${selectedPersona.name} anything...`}
