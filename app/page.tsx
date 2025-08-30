@@ -66,6 +66,49 @@ type PersonaNames =
 
 const personas: Persona[] = [
   {
+    id: "president-trump",
+    name: "Donald Trump",
+    role: "45th & 47th U.S. President",
+    avatar: presidentTrumpImage,
+    icon: <Building className="w-4 h-4" />,
+    description: "Businessman and political figure recognized worldwide.",
+    color: "bg-red-100 text-red-800",
+    social: "https://x.com/realDonaldTrump",
+  },
+  {
+    id: "elon-musk",
+    name: "Elon Musk",
+    role: "Entrepreneur",
+    avatar: elonMuskImage,
+    icon: <Rocket className="w-4 h-4" />,
+    description:
+      "CEO of SpaceX and Tesla, pushing innovation in space and technology.",
+    color: "bg-sky-100 text-sky-800",
+    social: "https://x.com/elonmusk",
+  },
+  {
+    id: "steve-jobs",
+    name: "Steve Jobs",
+    role: "Co-founder of Apple",
+    avatar: steveJobsImage,
+    icon: <Apple className="w-4 h-4" />,
+    description:
+      "Visionary innovator behind Apple, iPhone, and modern design thinking.",
+    color: "bg-gray-100 text-gray-800",
+    social: "https://www.apple.com/in/",
+  },
+  {
+    id: "david-goggins",
+    name: "David Goggins",
+    role: "Motivational Speaker",
+    avatar: davidGogginsImage,
+    icon: <Dumbbell className="w-4 h-4" />,
+    description:
+      "Former Navy SEAL and ultramarathon runner known for mental toughness.",
+    color: "bg-amber-100 text-amber-800",
+    social: "https://x.com/davidgoggins",
+  },
+  {
     id: "piyush-sir",
     name: "Piyush Garg",
     role: "Educator, Entrepreneur",
@@ -100,30 +143,6 @@ const personas: Persona[] = [
   },
 
   {
-    id: "elon-musk",
-    name: "Elon Musk",
-    role: "Entrepreneur",
-    avatar: elonMuskImage,
-    icon: <Rocket className="w-4 h-4" />,
-    description:
-      "CEO of SpaceX and Tesla, pushing innovation in space and technology.",
-    color: "bg-sky-100 text-sky-800",
-    social: "https://x.com/elonmusk",
-  },
-
-  {
-    id: "david-goggins",
-    name: "David Goggins",
-    role: "Motivational Speaker",
-    avatar: davidGogginsImage,
-    icon: <Dumbbell className="w-4 h-4" />,
-    description:
-      "Former Navy SEAL and ultramarathon runner known for mental toughness.",
-    color: "bg-amber-100 text-amber-800",
-    social: "https://x.com/davidgoggins",
-  },
-
-  {
     id: "president-obama",
     name: "Barack Obama",
     role: "44th U.S. President",
@@ -132,27 +151,6 @@ const personas: Persona[] = [
     description: "Leader known for hope, change, and inspirational speeches.",
     color: "bg-blue-100 text-blue-800",
     social: "https://x.com/BarackObama",
-  },
-  {
-    id: "president-trump",
-    name: "Donald Trump",
-    role: "45th & 47th U.S. President",
-    avatar: presidentTrumpImage,
-    icon: <Building className="w-4 h-4" />,
-    description: "Businessman and political figure recognized worldwide.",
-    color: "bg-red-100 text-red-800",
-    social: "https://x.com/realDonaldTrump",
-  },
-  {
-    id: "steve-jobs",
-    name: "Steve Jobs",
-    role: "Co-founder of Apple",
-    avatar: steveJobsImage,
-    icon: <Apple className="w-4 h-4" />,
-    description:
-      "Visionary innovator behind Apple, iPhone, and modern design thinking.",
-    color: "bg-gray-100 text-gray-800",
-    social: "https://www.apple.com/in/",
   },
 ];
 
