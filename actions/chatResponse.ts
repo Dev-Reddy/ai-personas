@@ -53,7 +53,7 @@ async function generateChatResponse(messages: Message[], persona: Persona) {
     const urlContextTool = { urlContext: {} };
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: "gemini-3.1-flash-lite",
       contents: formattedContents,
       config: {
         systemInstruction: systemContexts[persona],
